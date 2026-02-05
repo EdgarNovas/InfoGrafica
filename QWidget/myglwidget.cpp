@@ -44,29 +44,37 @@ void MyGLWidget::paintGL()
 
     glVertex2f(0.5f, -0.5f);
     glColor3f(0.f,0.f,1.f);
-    */
 
 
+    glVertex2f(0.02f, 0.02f);
+    glColor3f(1.f,0.f,0.f);
 
+    glVertex2f(-0.02f, -0.02f);
+    glColor3f(0.f,1.0f,0.f);
+
+    glVertex2f(0.02f, -0.02f);
+    glColor3f(0.f,0.f,1.f);
+ */
     float x = -0.8f;
 
     for (int i = 0; i < 1000; i++) {
 
-        glColor3f(1.0f, 0.5f, 0.2f);
+        glColor3f(0.5f, 0.2f, 0.2f);
 
         //Parte Izquierda
         glVertex2f(x, -0.5f);
-        glVertex2f(x + 0.2f, -0.5f);
+        glVertex2f(x +x+ 0.2f, -0.5f);
         glVertex2f(x + 0.1f, -0.2f);
 
         //Parte Derecha
-        glVertex2f(x + 0.2f, -0.5f);
-        glVertex2f(x + 0.2f, -0.5f);
-        glVertex2f(x + 0.1f, -0.2f);
+        glVertex2f(x , 0.5f);
+        glVertex2f(x + x, 0.5f);
+        glVertex2f(x + x, 0.2f);
 
         x += 0.2f;
     }
 
+//TO DO: SINGLETON
 
 
 
