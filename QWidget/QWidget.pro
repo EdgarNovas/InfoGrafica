@@ -7,7 +7,9 @@ win32-msvc: QMAKE_LFLAGS += /PDB:NONE
 
 SOURCES += \
     main.cpp \
-    myglwidget.cpp
+    myglwidget.cpp \
+    startcaverncode.cpp
 
 HEADERS += \
-    myglwidget.h
+    myglwidget.h \
+    startcaverncode.h
