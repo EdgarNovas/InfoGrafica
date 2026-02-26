@@ -2,7 +2,11 @@
 #include "myglwidget.h"
 #include <GL/gl.h>
 
-MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent) {}
+
+
+MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent) {
+    setFocusPolicy(Qt::StrongFocus); // leer teclado
+}
 
 void MyGLWidget::initializeGL()
 {
@@ -41,7 +45,7 @@ static void rectangulo(float x1, float y1,float x2, float y2)
 }
 
 
-static void pine(float x, float y, float size,float sway)
+static void pine(float x, float y, float size,float sway,float season)
 {
     glColor3f(0.55f, 0.27f, 0.07f);
 
@@ -57,8 +61,25 @@ static void pine(float x, float y, float size,float sway)
     glVertex2f(x - trunkWidth / 2, y);                 // Abajo Izq
     glVertex2f(x + trunkWidth / 2, y + trunkHeight);   // Arriba Der
     glVertex2f(x - trunkWidth / 2, y + trunkHeight);   // Arriba Izq
+    float r = 0.13f;
+    float g = 0.55f;
+    float b = 0.13f;
+    if (season < 0.0f) {
+        // INVIERNO Blanco
+        float f = -season; // Convertimos a positivo de 0 a 1
+        r = (r * (1.0f - f)) + (0.8f * f);
+        g = (g * (1.0f - f)) + (0.9f * f);
+        b = (b * (1.0f - f)) + (1.0f * f);
+    } else if (season > 0.0f) {
+        //  OTOÑO NaranjaRojizo
+        float f = season; // De 0 a 1
+        r = (r * (1.0f - f)) + (0.8f * f);
+        g = (g * (1.0f - f)) + (0.3f * f);
+        b = (b * (1.0f - f)) + (0.0f * f);
+    }
+    glColor3f(r, g, b); // Aplicamos el color resultante
 
-    glColor3f(0.13f, 0.55f, 0.13f);
+
 
     float triangleBaseY = y + trunkHeight * 0.8f;
     float triangleHeight = size / 2.5f;
@@ -100,13 +121,39 @@ static void pine(float x, float y, float size,float sway)
 void MyGLWidget::paintGL()
 {
     //Cielo
-    glClearColor(0.55f,0.75f,0.95f,1.f);
+    //glClearColor(0.55f,0.75f,0.95f,1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    static float cam = 0.0f;
+
+    //Movimiento velocidad teclado
+
+    currentWindForce += (targetWindForce - currentWindForce) * 0.05f;
+    currentSeason += (targetSeason - currentSeason) * 0.02f;
+
+    float skyR = 0.55f, skyG = 0.75f, skyB = 0.95f; // Cielo normal
+    if (currentSeason < 0.0f) {
+        // Cielo de Invierno gris
+        float f = -currentSeason;
+        skyR = skyR * (1-f) + 0.4f * f;
+        skyG = skyG * (1-f) + 0.45f * f;
+        skyB = skyB * (1-f) + 0.5f * f;
+    } else if (currentSeason > 0.0f) {
+        // Cielo de Otoño (Atardecer naranja)
+        float f = currentSeason;
+        skyR = skyR * (1-f) + 0.8f * f;
+        skyG = skyG * (1-f) + 0.5f * f;
+        skyB = skyB * (1-f) + 0.3f * f;
+    }
+    glClearColor(skyR,skyG,skyB,1.f);
+
+    static float timeAnim = 0.0f;
+    timeAnim += 0.05f;
+
+    cam += camSpeed;
+
     float viento = sin(cam * 10.0f) * 0.05f;
-    cam += 0.025f;
+    //cam += 0.025f;
 
     //RAYO CLASE
     static int flash = 0;
@@ -115,7 +162,7 @@ void MyGLWidget::paintGL()
         glClearColor(1.f, 1.f, 1.f, 1.f);
         flash--;
     } else {
-        glClearColor(0.55f, 0.75f, 0.95f, 1.f);
+        glClearColor(skyR, skyG, skyB, 1.f);
     }
 
     // probabilidad del relámpago
@@ -222,7 +269,8 @@ void MyGLWidget::paintGL()
     {
         glColor3f(0.78, 0.376, 0);
         float vientoLocal = sin((cam * 5.0f) + i) * 0.2f;
-        pine(x,-.9f,.5f,vientoLocal);
+        float vientoTotal = vientoLocal + currentWindForce;
+        pine(x,-.9f,.5f,vientoTotal,currentSeason);
         x += step;
     }
 
@@ -232,4 +280,43 @@ void MyGLWidget::paintGL()
 
     glPopMatrix();
     update();
+}
+
+
+void MyGLWidget::keyPressEvent(QKeyEvent *event)
+{
+    // VIENTO (A / D)
+    if(event->key() == Qt::Key_A || event->key() == Qt::Key_Left) {
+        targetWindForce = -0.5f; // Vendaval Izquierda
+    }
+    else if(event->key() == Qt::Key_D || event->key() == Qt::Key_Right) {
+        targetWindForce = 0.5f;  // Vendaval Derecha
+    }
+
+    // ESTACIONES (W / S)
+    if(event->key() == Qt::Key_W || event->key() == Qt::Key_Up) {
+        targetSeason = 1.0f;   // Hacia el Otoño
+    }
+    else if(event->key() == Qt::Key_S || event->key() == Qt::Key_Down) {
+        targetSeason = -1.0f;  // Hacia el Invierno
+    }
+}
+
+void MyGLWidget::keyReleaseEvent(QKeyEvent *event)
+{
+// VIENTO (A / D)
+    if(event->key() == Qt::Key_A || event->key() == Qt::Key_Left) {
+        if (targetWindForce < 0) targetWindForce = 0.0f;
+    }
+    else if(event->key() == Qt::Key_D || event->key() == Qt::Key_Right) {
+        if (targetWindForce > 0) targetWindForce = 0.0f;
+    }
+ // ESTACIONES (W / S)
+    if(event->key() == Qt::Key_W || event->key() == Qt::Key_Up) {
+        if (targetSeason > 0) targetSeason = 0.0f;
+    }
+    else if(event->key() == Qt::Key_S || event->key() == Qt::Key_Down) {
+        if (targetSeason < 0) targetSeason = 0.0f;
+    }
+
 }
