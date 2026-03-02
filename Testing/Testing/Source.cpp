@@ -1,4 +1,4 @@
-#include <GL/glew.h>
+﻿#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm.hpp>
 
@@ -36,12 +36,13 @@ int main(void)
     //definir ese buffer
     glfwGetFramebufferSize(window, &iFrameBufferWidth, &iFrameBufferHeight);
 
-    //DEFINIMOS TAMA�O VIEWPORT
+    //DEFINIMOS TAMAÑO VIEWPORT
     glViewport(0,0, iFrameBufferWidth, iFrameBufferHeight);
 
 
     //definimos que ventana usar
     glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, ResizeWindow);
 
     //permitir que GLEW utilice funciones modernas de opengl
     glewExperimental = GL_TRUE;
@@ -67,7 +68,7 @@ int main(void)
     glBindBuffer(GL_ARRAY_BUFFER, vboPuntos);
 
 
-    // Permitir cambiar tama�o del punto desde shader
+    // Permitir cambiar tamaño del punto desde shader
     glEnable(GL_PROGRAM_POINT_SIZE);
 
     // =========================
@@ -124,7 +125,13 @@ int main(void)
 
 
 
-    GLfloat punto[] = { 0.0f,0.0f, 0.5f,  0.5f };
+    GLfloat punto[] = { 
+
+        0.0f,0.5f,
+        0.5,-0.5f,
+        -0.5,-0.5f
+         
+    };
 
     //damos ordenes
     glBufferData(GL_ARRAY_BUFFER, sizeof(punto), punto, GL_STATIC_DRAW);
@@ -157,8 +164,10 @@ int main(void)
         //Dibujar y mostrar
         glUseProgram(shaderProgram);
         glBindVertexArray(vaoPuntos);
-        glDrawArrays(GL_POINTS,0,2);
-
+        //glDrawArrays(GL_LINE_STRIP,0,7);
+        glDrawArrays(GL_LINE_STRIP, 0, 4); // Alkaid → Mizar → Alioth → Megrez (mango)
+        glDrawArrays(GL_LINE_STRIP, 3, 5); // Megrez → Phecda → Merak → Dubhe → Megrez (cazo cerrado)
+        glDrawArrays(GL_TRIANGLES, 0, 7);
         //Dejamos de usar el vao
         glBindVertexArray(0);
 
