@@ -39,6 +39,15 @@ void main()
 	//Activo funciones experimentales para todas las graficas (sobretodo las antiguas)
 	glewExperimental = GL_TRUE;
 
+	//Activamos culling
+	glEnable(GL_CULL_FACE);
+
+	//Indicamos lado del culling
+	glCullFace(GL_BACK);
+
+
+
+
 	if (glewInit() == GLEW_OK)
 	{
 		std::cout << "Ha funcionado" << std::endl;
@@ -57,14 +66,44 @@ void main()
 		//Indico que VBO es el activo y que este almacena array de datos
 		glBindBuffer(GL_ARRAY_BUFFER, vboPuntos);
 
+		//Dibuja geometria con las lineas
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+
 		//Declaro puntos {x,y}
-		GLfloat punto[] = { 0.f,0.f };
+		GLfloat punto[] = { 
+
+			-0.5f,0.5f,
+			0.5f,-0.5f,
+			0.5f,0.5f,
+
+			0.5f,-0.5f,
+			-0.5f,0.5f,
+			-0.5f,-0.5f,
+
+
+						
+	/*
+	* 
+	0.5f,0.5f, 
+	-0.5f,-0.5f,
+	0.65f,0.25f,
+	0.05f,0.25f,
+	0.23f, 0.25*/
+		};
 		
 		//Vuelco el array en el VBO
 		glBufferData(GL_ARRAY_BUFFER, sizeof(punto), punto, GL_STATIC_DRAW);
 
 		//Indico como leer la informacion
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)0);
+		glVertexAttribPointer(
+			0,                  // índice del atributo (layout location)
+			2,                  // nº de componentes por vértice
+			GL_FLOAT,           // tipo de dato
+			GL_FALSE,
+			2 * sizeof(GLfloat), // stride
+			(GLvoid*)0          // offset inicial
+		);
 
 		//Activo los datos para que la GPU pueda usarlos
 		glEnableVertexAttribArray(0);
@@ -89,8 +128,11 @@ void main()
 			glBindVertexArray(vaoPuntos);
 
 			//Dibujo geometria cargada
-			glDrawArrays(GL_POINTS,0,1);
 
+			glDrawArrays(GL_TRIANGLES,0,6);
+		
+			
+			//Para solo el segundo glDrawArrays(GL_POINTS,1,1); //el primer 1 es la 3ra coordenada que que la 2 no la incluye es como un +1
 			//Desvinculo VAO
 			glBindVertexArray(0);
 
