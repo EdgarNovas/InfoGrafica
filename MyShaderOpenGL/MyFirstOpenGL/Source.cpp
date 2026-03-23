@@ -136,6 +136,7 @@ GLuint CreateProgram(const ShaderProgram& shaders)
 
 void main()
 {
+	srand(time(NULL));
 	std::cout << "Contenido del fichero: " << Load_File("MyFirstVertexShader.glsl") << std::endl;
 
 	//Inicializamos GLFW para gestionar ventanas e inputs
@@ -180,7 +181,7 @@ void main()
 		//Definimos color para limpiar el buffer de color
 		glClearColor(1.f, 0.f, 0.f, 1.f);
 
-		GLuint vaoPuntos, vboPuntos;
+		GLuint vaoPuntos, vboPuntos, vboAleatorios;
 
 		//Definimos cantidad de vao a crear y donde almacenarlos 
 		glGenVertexArrays(1, &vaoPuntos);
@@ -191,9 +192,11 @@ void main()
 
 		//Definimos cantidad de vbo a crear y donde almacenarlos
 		glGenBuffers(1, &vboPuntos);
+		glGenBuffers(1, &vboAleatorios);
 
 		//Indico que el VBO activo es el que acabo de crear y que almacenará un array. Todos los VBO que genere se asignaran al último VAO que he hecho glBindVertexArray
 		glBindBuffer(GL_ARRAY_BUFFER, vboPuntos);		
+		glBindBuffer(GL_ARRAY_BUFFER, vboAleatorios);
 
 		//Posición X e Y del punto
 		GLfloat punto[] = {
@@ -204,17 +207,28 @@ void main()
 			 0.5f,  0.5f, // Vértice inferior izquierdo
 			 0.5f, -0.5f  // Vértice superior izquierdo
 		};
+		glBufferData(GL_ARRAY_BUFFER, sizeof(punto), punto, GL_STATIC_DRAW);
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)0);
+
+		GLfloat randomData[12];
+		for (int i = 0; i < 12; i++)
+		{
+			randomData[i] = static_cast<GLfloat>(rand()) / RAND_MAX * 0.5f;
+		}
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		//Ponemos los valores en el VBO creado
-		glBufferData(GL_ARRAY_BUFFER, sizeof(punto), punto, GL_STATIC_DRAW);
+		
+		glBufferData(GL_ARRAY_BUFFER, sizeof(randomData), randomData, GL_STATIC_DRAW);
 
 		//Indicamos donde almacenar y como esta distribuida la información
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)0);
+		
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)0);
 
 		//Indicamos que la tarjeta gráfica puede usar el atributo 0
 		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
 
 		//Desvinculamos VAO
 		glBindVertexArray(0);
