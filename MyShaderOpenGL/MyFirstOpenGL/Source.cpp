@@ -11,7 +11,7 @@
 struct ShaderProgram
 {
 	GLuint vertexShader = 0;
-
+	GLuint fragmentShader = 0;
 };
 
 void Resize_Window(GLFWwindow* window, int iFrameBufferWidth, int iFrameBufferHeight) {
@@ -136,7 +136,7 @@ GLuint CreateProgram(const ShaderProgram& shaders)
 
 void main()
 {
-	std::cout << "Contenido del fichero: " << Load_File("Deleteme.txt") << std::endl;
+	std::cout << "Contenido del fichero: " << Load_File("MyFirstVertexShader.glsl") << std::endl;
 
 	//Inicializamos GLFW para gestionar ventanas e inputs
 	glfwInit();
@@ -185,6 +185,7 @@ void main()
 		//Definimos cantidad de vao a crear y donde almacenarlos 
 		glGenVertexArrays(1, &vaoPuntos);
 
+
 		//Indico que el VAO activo de la GPU es el que acabo de crear
 		glBindVertexArray(vaoPuntos);
 
@@ -230,6 +231,8 @@ void main()
 			//Limpiamos los buffers
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
+			glUseProgram(myFirstCompiledProgram);
+
 			//Definimos que queremos usar el VAO con los puntos
 			glBindVertexArray(vaoPuntos);
 
@@ -243,6 +246,10 @@ void main()
 			glFlush();
 			glfwSwapBuffers(window);
 		}
+
+		//Desactivat y liberar programa
+		glUseProgram(0);
+		glDeleteProgram(myFirstCompiledProgram);
 
 	}else {
 		std::cout << "Ha petao." << std::endl;

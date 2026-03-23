@@ -1,3 +1,3 @@
 ﻿  Source.cpp
-C:\Users\EdgarNovasPaniagua\Documents\InfoGrafica\MyShaderOpenGL\MyFirstOpenGL\Source.cpp(43,6): warning C4326: return type of 'main' should be 'int' instead of 'void'
+C:\Users\EdgarNovasPaniagua\Documents\InfoGrafica\MyShaderOpenGL\MyFirstOpenGL\Source.cpp(137,6): warning C4326: return type of 'main' should be 'int' instead of 'void'
   MyFirstOpenGL.vcxproj -> C:\Users\EdgarNovasPaniagua\Documents\InfoGrafica\MyShaderOpenGL\x64\Debug\MyFirstOpenGL.exe
