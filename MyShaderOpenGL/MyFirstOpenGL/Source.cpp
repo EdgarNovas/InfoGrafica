@@ -1,5 +1,6 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm.hpp>
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -11,7 +12,6 @@
 struct ShaderProgram
 {
 	GLuint vertexShader = 0;
-	GLuint fragmentShader = 0;
 };
 
 void Resize_Window(GLFWwindow* window, int iFrameBufferWidth, int iFrameBufferHeight) {
@@ -137,6 +137,8 @@ GLuint CreateProgram(const ShaderProgram& shaders)
 void main()
 {
 	srand(time(NULL));
+
+	glm::vec2 direction = {0.0f,0.0f};
 	std::cout << "Contenido del fichero: " << Load_File("MyFirstVertexShader.glsl") << std::endl;
 
 	//Inicializamos GLFW para gestionar ventanas e inputs
@@ -178,6 +180,10 @@ void main()
 		GLuint myFirstCompiledProgram;
 		myFirstCompiledProgram = CreateProgram(myFirstProgram);
 
+
+		//Obtener referencia a la variable
+		GLint offfsetReference = glGetUniformLocation(myFirstCompiledProgram, "offset");
+
 		//Definimos color para limpiar el buffer de color
 		glClearColor(1.f, 0.f, 0.f, 1.f);
 
@@ -192,11 +198,11 @@ void main()
 
 		//Definimos cantidad de vbo a crear y donde almacenarlos
 		glGenBuffers(1, &vboPuntos);
-		glGenBuffers(1, &vboAleatorios);
+		
 
 		//Indico que el VBO activo es el que acabo de crear y que almacenará un array. Todos los VBO que genere se asignaran al último VAO que he hecho glBindVertexArray
 		glBindBuffer(GL_ARRAY_BUFFER, vboPuntos);		
-		glBindBuffer(GL_ARRAY_BUFFER, vboAleatorios);
+		
 
 		//Posición X e Y del punto
 		GLfloat punto[] = {
@@ -209,12 +215,21 @@ void main()
 		};
 		glBufferData(GL_ARRAY_BUFFER, sizeof(punto), punto, GL_STATIC_DRAW);
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)0);
+		glEnableVertexAttribArray(0);
+		
 
+		glGenBuffers(1, &vboAleatorios);
+		glBindBuffer(GL_ARRAY_BUFFER, vboAleatorios);
 		GLfloat randomData[12];
 		for (int i = 0; i < 12; i++)
 		{
 			randomData[i] = static_cast<GLfloat>(rand()) / RAND_MAX * 0.5f;
 		}
+
+		glGenBuffers(1, &vboAleatorios);
+		glBindBuffer(GL_ARRAY_BUFFER, vboAleatorios);
+
+
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -227,7 +242,7 @@ void main()
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)0);
 
 		//Indicamos que la tarjeta gráfica puede usar el atributo 0
-		glEnableVertexAttribArray(0);
+		
 		glEnableVertexAttribArray(1);
 
 		//Desvinculamos VAO
@@ -242,10 +257,40 @@ void main()
 			//Pulleamos los eventos (botones, teclas, mouse...)
 			glfwPollEvents();
 
+			if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+			{
+				direction.x += -.005f;
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+			{
+				direction.x += .005f;
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+			{
+				direction.y += .005f;
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+			{
+				direction.y += -.005f;
+			}
+
+			
+
 			//Limpiamos los buffers
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 			glUseProgram(myFirstCompiledProgram);
+
+			//Declaramos vector2
+			
+			glm::vec2 offset = glm::vec2(0.4f, 0.5f);
+			offset = direction;
+			//Modificar variable offset
+			glUniform2fv(offfsetReference,1, &offset[0]);
+
 
 			//Definimos que queremos usar el VAO con los puntos
 			glBindVertexArray(vaoPuntos);

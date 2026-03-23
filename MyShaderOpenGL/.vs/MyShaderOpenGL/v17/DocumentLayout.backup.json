@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\EdgarNovasPaniagua\\Documents\\InfoGrafica\\MyShaderOpenGL\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{4CB11EB4-D01A-4081-97C9-F1D20263F6CC}|MyFirstOpenGL\\MyFirstOpenGL.vcxproj|C:\\Users\\EdgarNovasPaniagua\\Documents\\InfoGrafica\\MyShaderOpenGL\\MyFirstOpenGL\\MyFirstVertexShader.glsl||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{4CB11EB4-D01A-4081-97C9-F1D20263F6CC}|MyFirstOpenGL\\MyFirstOpenGL.vcxproj|solutionrelative:MyFirstOpenGL\\MyFirstVertexShader.glsl||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{4CB11EB4-D01A-4081-97C9-F1D20263F6CC}|MyFirstOpenGL\\MyFirstOpenGL.vcxproj|C:\\Users\\EdgarNovasPaniagua\\Documents\\InfoGrafica\\MyShaderOpenGL\\MyFirstOpenGL\\Source.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{4CB11EB4-D01A-4081-97C9-F1D20263F6CC}|MyFirstOpenGL\\MyFirstOpenGL.vcxproj|solutionrelative:MyFirstOpenGL\\Source.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4CB11EB4-D01A-4081-97C9-F1D20263F6CC}|MyFirstOpenGL\\MyFirstOpenGL.vcxproj|C:\\Users\\EdgarNovasPaniagua\\Documents\\InfoGrafica\\MyShaderOpenGL\\MyFirstOpenGL\\MyFirstVertexShader.glsl||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{4CB11EB4-D01A-4081-97C9-F1D20263F6CC}|MyFirstOpenGL\\MyFirstOpenGL.vcxproj|solutionrelative:MyFirstOpenGL\\MyFirstVertexShader.glsl||{8B382828-6202-11D1-8870-0000F87579D2}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,30 +18,30 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "MyFirstVertexShader.glsl",
               "DocumentMoniker": "C:\\Users\\EdgarNovasPaniagua\\Documents\\InfoGrafica\\MyShaderOpenGL\\MyFirstOpenGL\\MyFirstVertexShader.glsl",
               "RelativeDocumentMoniker": "MyFirstOpenGL\\MyFirstVertexShader.glsl",
               "ToolTip": "C:\\Users\\EdgarNovasPaniagua\\Documents\\InfoGrafica\\MyShaderOpenGL\\MyFirstOpenGL\\MyFirstVertexShader.glsl",
               "RelativeToolTip": "MyFirstOpenGL\\MyFirstVertexShader.glsl",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAABAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
               "WhenOpened": "2026-03-23T14:09:41.951Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Source.cpp",
               "DocumentMoniker": "C:\\Users\\EdgarNovasPaniagua\\Documents\\InfoGrafica\\MyShaderOpenGL\\MyFirstOpenGL\\Source.cpp",
               "RelativeDocumentMoniker": "MyFirstOpenGL\\Source.cpp",
               "ToolTip": "C:\\Users\\EdgarNovasPaniagua\\Documents\\InfoGrafica\\MyShaderOpenGL\\MyFirstOpenGL\\Source.cpp",
               "RelativeToolTip": "MyFirstOpenGL\\Source.cpp",
-              "ViewState": "AgIAAOoAAAAAAAAAAADwvwUBAAADAAAAAAAAAA==",
+              "ViewState": "AgIAAPkAAAAAAAAAAADwvxkBAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-03-19T19:20:46.43Z",
               "EditorCaption": ""
