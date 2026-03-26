@@ -13,6 +13,7 @@ struct ShaderProgram
 {
 	GLuint vertexShader = 0;
 	GLuint geometryShader = 0;
+	GLuint fragmentShader = 0;
 };
 
 void Resize_Window(GLFWwindow* window, int iFrameBufferWidth, int iFrameBufferHeight) {
@@ -45,6 +46,48 @@ std::string Load_File(const std::string& filePath)
 
 	file.close();
 	return fileContent;
+}
+
+GLuint LoadFragmentShader(const std::string& filePath)
+{
+	//Crear vertex shader a la GPU
+	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+	//Leo el archivo con el shader y lo almaceno
+	std::string sShaderCode = Load_File(filePath);
+	const char* cShaderSource = sShaderCode.c_str();
+
+	//Vinculo el vertex shader a la GPU
+	glShaderSource(fragmentShader, 1, &cShaderSource, nullptr);
+
+	//Compilar vertex shader
+	glCompileShader(fragmentShader);
+
+	//Verificacion de la compilacion del shader
+	GLint success;
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+
+	if (success)
+	{
+		return fragmentShader;
+	}
+	else
+	{
+		//Obtener longitud del log
+		GLint logLength;
+		glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &logLength);
+
+		//Obtenemos el log
+		std::vector<GLchar> errorLog(logLength);
+		glGetShaderInfoLog(fragmentShader, logLength, nullptr, errorLog.data());
+
+		//Mostramos el log
+		std::cerr << "Se ha producido el siguiente error : " << errorLog.data() << std::endl;
+
+		std::exit(EXIT_FAILURE);
+
+	}
+
 }
 
 GLuint LoadGeometryShader(const std::string& filePath) //Podriamos poner aqui un enum para recbir y saber si es geometry o vertex shader
@@ -148,6 +191,11 @@ GLuint CreateProgram(const ShaderProgram& shaders)
 		glAttachShader(program, shaders.geometryShader);
 	}
 
+	if (shaders.geometryShader != 0)
+	{
+		glAttachShader(program, shaders.fragmentShader);
+	}
+
 	//Linkear el programa
 	glLinkProgram(program);
 
@@ -167,6 +215,12 @@ GLuint CreateProgram(const ShaderProgram& shaders)
 		if (shaders.geometryShader != 0)
 		{
 			glDetachShader(program, shaders.geometryShader);
+		}
+
+
+		if (shaders.geometryShader != 0)
+		{
+			glDetachShader(program, shaders.fragmentShader);
 		}
 
 		return program;
@@ -229,6 +283,7 @@ void main()
 		ShaderProgram myFirstProgram;
 		myFirstProgram.vertexShader = LoadVertexShader("MyFirstVertexShader.glsl");
 		myFirstProgram.geometryShader = LoadGeometryShader("MyFirstGeometryShader.glsl");
+		myFirstProgram.geometryShader = LoadFragmentShader("MyFirstFragmentShader.glsl");
 
 		//Compilar programa
 		GLuint myFirstCompiledProgram;
@@ -239,7 +294,7 @@ void main()
 		GLint offfsetReference = glGetUniformLocation(myFirstCompiledProgram, "offset");
 
 		//Definimos color para limpiar el buffer de color
-		glClearColor(1.f, 0.f, 0.f, 1.f);
+		glClearColor(0.f, 0.f, 0.f, 1.f);
 
 		GLuint vaoPuntos, vboPuntos, vboAleatorios;
 
@@ -260,12 +315,17 @@ void main()
 
 		//Posición X e Y del punto
 		GLfloat punto[] = {
-			-0.5f,  0.5f, // Vértice superior izquierdo
-			-0.5f, -0.5f, // Vértice superior derecho
-			 0.0f,  0.5f, // Vértice inferior derecho
-			 0.0f, -0.5f, // Vértice inferior derecho
-			 0.5f,  0.5f, // Vértice inferior izquierdo
-			 0.5f, -0.5f  // Vértice superior izquierdo
+			0.0f,   0.5f,
+			-0.433f, -0.25f, 
+			 0.433f, -0.25f  
+			/*
+			-0.5f,  0.5f, 
+			-0.5f, -0.5f, 
+			 0.0f,  0.5f, 
+			 0.0f, -0.5f, 
+			 0.5f,  0.5f, 
+			 0.5f, -0.5f  
+			 */
 		};
 		glBufferData(GL_ARRAY_BUFFER, sizeof(punto), punto, GL_STATIC_DRAW);
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)0);
@@ -283,9 +343,7 @@ void main()
 		glGenBuffers(1, &vboAleatorios);
 		glBindBuffer(GL_ARRAY_BUFFER, vboAleatorios);
 
-
-
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		//Ponemos los valores en el VBO creado
 		
@@ -350,7 +408,7 @@ void main()
 			glBindVertexArray(vaoPuntos);
 
 			//Definimos que queremos dibujar
-			glDrawArrays(GL_TRIANGLE_STRIP, 0, 6);
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
 
 			//Dejamos de usar el VAO indicado anteriormente
 			glBindVertexArray(0);
