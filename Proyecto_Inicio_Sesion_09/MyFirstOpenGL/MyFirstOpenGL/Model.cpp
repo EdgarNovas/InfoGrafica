@@ -43,6 +43,7 @@ Model::Model(const std::vector<float>& vertexs, const std::vector<float>& uvs, c
 
 void Model::Render() const {
 
+
     //Vinculo su VAO para ser usado
     glBindVertexArray(this->VAO);
 

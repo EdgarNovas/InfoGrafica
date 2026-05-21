@@ -444,7 +444,7 @@ void main() {
 
 		//Definir la matriz de traslacion, rotacion y escalado
 		glm::mat4 translationMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0.f));
-		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.f, 1.f, 0.f));
+		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(0.f, 1.f, 0.f));
 		glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.f), glm::vec3(1.f));
 
 		// Definir la matriz de vista
